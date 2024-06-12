@@ -8,6 +8,9 @@ Note:   any user input/output should be done in the module 'tui'
         any visualisation should be done in the module 'visual'
 """
 
-print("Car")
+import tui
 
+print("\n--------------------------""\nDisneyland Review Analyser""\n--------------------------")
 
+if __name__ == "__main__":
+    tui.main_menu()
