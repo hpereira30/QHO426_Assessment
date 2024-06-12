@@ -1,8 +1,3 @@
-"""
-This module is responsible for visualising the data using Matplotlib.
-Any visualisations should be generated via functions in this module.
-"""
-
 import matplotlib.pyplot as plt
 import process
 
@@ -10,25 +5,24 @@ import process
 def vis():
     file_name = 'data/disneyland_reviews.csv'
     data = process.read_data_from_csv(file_name)
-
     review_counts = {}
+    labels = []
+    values = ()
 
     for row in data:
         disneyland_name = row[4]
-        try:
-            review_count = 1
-        except ValueError:
-            continue
+        review_count = 1
 
-        if disneyland_name in review_counts:
+        if disneyland_name == review_counts:
             review_counts[disneyland_name] += review_count
         else:
             review_counts[disneyland_name] = review_count
 
-    labels = [f"{name}\n{count} Reviews" for name, count in review_counts.items()]
-    values = list(review_counts.values())
+    for name, count in review_counts.items():
+        labels = [f"{name}\n{count}"]
+        values = (review_counts.values())
 
-    plt.pie(values, labels=labels)
+    plt.pie(values, labels)
     plt.title('Review Distribution for Each Disneyland')
     plt.axis('equal')
     plt.show()
@@ -57,7 +51,7 @@ def vis2():
 def plot_bar_chart(top_locations):
     locations, ratings = zip(*top_locations)
     plt.figure(figsize=(10, 6))
-    plt.bar(locations, ratings, color='skyblue')
+    plt.bar(locations, ratings, color='sky blue')
     plt.xlabel('Location')
     plt.ylabel('Average Rating')
     plt.title('Top 10 Locations with Highest Average Rating')
@@ -100,7 +94,7 @@ def plot_monthly_bar_chart(month_ratings):
 
 
 def vis4():
-    file_name = 'disneyland_reviews.csv'
+    file_name = 'data/disneyland_reviews.csv'
     data = process.read_data_from_csv(file_name)
 
     park_name = input("Enter the name of the park: ")

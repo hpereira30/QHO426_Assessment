@@ -1,9 +1,3 @@
-"""
-This module is responsible for processing the data.  It will largely contain functions that will recieve the overall dataset and 
-perfrom necessary processes in order to provide the desired result in the desired format.
-It is likely that most sections will require functions to be placed in this module.
-"""
-
 import csv
 
 
@@ -12,8 +6,8 @@ def read_data_from_csv(file_name):
     with open(file_name, 'r') as file:
         csv_reader = csv.reader(file)
         next(csv_reader)
-        for row in csv_reader:
-            data.append(row)
+        for line in csv_reader:
+            data.append(line)
     return data
 
 
@@ -24,21 +18,18 @@ def display_reviews_for_park(data, park_name):
 
 
 def reviews_park_location(data, park_name, location):
-    count = 0
+    counter = 0
     for row in data:
         if row[4] == park_name and row[3] == location:
-            count += 1
-    return count
+            counter += 1
+    return counter
 
 
 def calculate_overall_average_rating(data):
     park_ratings = {}
     for row in data:
         park_name = row[4]
-        try:
-            rating = float(row[1])
-        except ValueError:
-            continue
+        rating = float(row[1])
         if park_name in park_ratings:
             park_ratings[park_name].append(rating)
         else:
@@ -138,26 +129,30 @@ def average_rating_by_month_for_park(data, park_name):
     return sorted_avg_ratings
 
 
-class ParkExporter:
+class Exporter:
     def __init__(self, data):
         self.data = data
 
-    def _calculate_aggregate_info(self, park_name):
+    def calculate_info(self, park_name):
         num_reviews = 0
         num_positive_reviews = 0
         total_score = 0
+        avg_score = 0
+        num_countries = 0
         countries = set()
 
         for row in self.data:
             if row[4] == park_name:
                 num_reviews += 1
                 total_score += float(row[1])
-                if float(row[1]) >= 3:  # Considers reviews with score >= 3 as positive
+                if float(row[1]) >= 3:
                     num_positive_reviews += 1
                 countries.add(row[3])
 
-        avg_score = total_score / num_reviews if num_reviews > 0 else 0
-        num_countries = len(countries)
+        if num_reviews > 0:
+            avg_score = total_score / num_reviews
+        else:
+            num_countries = len(countries)
 
         return {
             'Number of reviews': num_reviews,
@@ -167,23 +162,23 @@ class ParkExporter:
         }
 
     def export_to_txt(self, park_name):
-        info = self._calculate_aggregate_info(park_name)
+        info = self.calculate_info(park_name)
         with open(f'{park_name}_info.txt', 'w') as f:
             for key, value in info.items():
                 f.write(f"{key}: {value}\n")
-        print(f"Exported aggregate information for {park_name} to {park_name}_info.txt")
+        print(f"Exported information for {park_name} to {park_name}_info.txt")
 
     def export_to_csv(self, park_name):
-        info = self._calculate_aggregate_info(park_name)
+        info = self.calculate_info(park_name)
         with open(f'{park_name}_info.csv', 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(['Attribute', 'Value'])
             for key, value in info.items():
                 writer.writerow([key, value])
-        print(f"Exported aggregate information for {park_name} to {park_name}_info.csv")
+        print(f"Exported information for {park_name} to {park_name}_info.csv")
 
     def export_to_json(self, park_name):
-        info = self._calculate_aggregate_info(park_name)
+        info = self.calculate_info(park_name)
         json_str = '{\n'
         for key, value in info.items():
             json_str += f'  "{key}": {value},\n'
@@ -192,4 +187,4 @@ class ParkExporter:
 
         with open(f'{park_name}_info.json', 'w') as f:
             f.write(json_str)
-        print(f"Exported aggregate information for {park_name} to {park_name}_info.json")
+        print(f"Exported information for {park_name} to {park_name}_info.json")
