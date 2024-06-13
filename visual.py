@@ -2,33 +2,34 @@ import matplotlib.pyplot as plt
 import process
 
 
-def vis():
+def reviews_per_park():
     file_name = 'data/disneyland_reviews.csv'
     data = process.read_data_from_csv(file_name)
+
     review_counts = {}
-    labels = []
-    values = ()
 
     for row in data:
         disneyland_name = row[4]
-        review_count = 1
+        try:
+            review_count = 1
+        except ValueError:
+            continue
 
-        if disneyland_name == review_counts:
+        if disneyland_name in review_counts:
             review_counts[disneyland_name] += review_count
         else:
             review_counts[disneyland_name] = review_count
 
-    for name, count in review_counts.items():
-        labels = [f"{name}\n{count}"]
-        values = (review_counts.values())
+    labels = [f"{name}\n{count} Reviews" for name, count in review_counts.items()]
+    values = list(review_counts.values())
 
-    plt.pie(values, labels)
+    plt.pie(values, labels=labels)
     plt.title('Review Distribution for Each Disneyland')
     plt.axis('equal')
     plt.show()
 
 
-def vis2():
+def average_review_score():
     file_name = 'data/disneyland_reviews.csv'
     data = process.read_data_from_csv(file_name)
 
@@ -51,7 +52,7 @@ def vis2():
 def plot_bar_chart(top_locations):
     locations, ratings = zip(*top_locations)
     plt.figure(figsize=(10, 6))
-    plt.bar(locations, ratings, color='sky blue')
+    plt.bar(locations, ratings, color='blue')
     plt.xlabel('Location')
     plt.ylabel('Average Rating')
     plt.title('Top 10 Locations with Highest Average Rating')
@@ -60,8 +61,8 @@ def plot_bar_chart(top_locations):
     plt.show()
 
 
-def vis3():
-    file_name = 'disneyland_reviews.csv'
+def park_ranking_nationality():
+    file_name = 'data/disneyland_reviews.csv'
     data = process.read_data_from_csv(file_name)
 
     park_name = input("Enter the name of the park: ")
@@ -85,7 +86,7 @@ def plot_monthly_bar_chart(month_ratings):
     }
     month_names = [month_names[month] for month in months]
     plt.figure(figsize=(10, 6))
-    plt.bar(month_names, ratings, color='skyblue')
+    plt.bar(month_names, ratings, color='blue')
     plt.xlabel('Month')
     plt.ylabel('Average Rating')
     plt.title('Average Rating for Each Month of the Year')
@@ -93,13 +94,13 @@ def plot_monthly_bar_chart(month_ratings):
     plt.show()
 
 
-def vis4():
+def popular_month_park():
     file_name = 'data/disneyland_reviews.csv'
     data = process.read_data_from_csv(file_name)
 
     park_name = input("Enter the name of the park: ")
 
-    month_ratings = process.average_rating_by_month_for_park(data, park_name)
+    month_ratings = process.average_scores_by_month_per_park(data, park_name)
     if not month_ratings:
         print(f"No reviews found for {park_name}.")
     else:

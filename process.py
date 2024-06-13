@@ -11,13 +11,13 @@ def read_data_from_csv(file_name):
     return data
 
 
-def display_reviews_for_park(data, park_name):
+def display_reviews_by_park(data, park_name):
     for row in data:
         if row[4] == park_name:
             print(row[1])
 
 
-def reviews_park_location(data, park_name, location):
+def reviews_by_park_and_location(data, park_name, location):
     counter = 0
     for row in data:
         if row[4] == park_name and row[3] == location:
@@ -58,7 +58,7 @@ def top_10_locations_for_park(data, park_name):
     return top_10_locations
 
 
-def average_rating_for_park_in_year(data, park_name, year):
+def average_score_per_park_by_year(data, park_name, year):
     total_rating = 0
     count = 0
     for row in data:
@@ -102,7 +102,7 @@ def print_average_scores(average_scores):
             print(f"Location: {location}, Average Score: {score:.2f}")
 
 
-def average_rating_by_month_for_park(data, park_name):
+def average_scores_by_month_per_park(data, park_name):
     month_ratings = {}
     month_counts = {}
     for row in data:
@@ -127,64 +127,3 @@ def average_rating_by_month_for_park(data, park_name):
 
     sorted_avg_ratings = sorted(avg_ratings.items(), key=lambda x: int(x[0]))
     return sorted_avg_ratings
-
-
-class Exporter:
-    def __init__(self, data):
-        self.data = data
-
-    def calculate_info(self, park_name):
-        num_reviews = 0
-        num_positive_reviews = 0
-        total_score = 0
-        avg_score = 0
-        num_countries = 0
-        countries = set()
-
-        for row in self.data:
-            if row[4] == park_name:
-                num_reviews += 1
-                total_score += float(row[1])
-                if float(row[1]) >= 3:
-                    num_positive_reviews += 1
-                countries.add(row[3])
-
-        if num_reviews > 0:
-            avg_score = total_score / num_reviews
-        else:
-            num_countries = len(countries)
-
-        return {
-            'Number of reviews': num_reviews,
-            'Number of positive reviews': num_positive_reviews,
-            'Average review score': avg_score,
-            'Number of countries': num_countries
-        }
-
-    def export_to_txt(self, park_name):
-        info = self.calculate_info(park_name)
-        with open(f'{park_name}_info.txt', 'w') as f:
-            for key, value in info.items():
-                f.write(f"{key}: {value}\n")
-        print(f"Exported information for {park_name} to {park_name}_info.txt")
-
-    def export_to_csv(self, park_name):
-        info = self.calculate_info(park_name)
-        with open(f'{park_name}_info.csv', 'w', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow(['Attribute', 'Value'])
-            for key, value in info.items():
-                writer.writerow([key, value])
-        print(f"Exported information for {park_name} to {park_name}_info.csv")
-
-    def export_to_json(self, park_name):
-        info = self.calculate_info(park_name)
-        json_str = '{\n'
-        for key, value in info.items():
-            json_str += f'  "{key}": {value},\n'
-        json_str = json_str[:-2]
-        json_str += '\n}'
-
-        with open(f'{park_name}_info.json', 'w') as f:
-            f.write(json_str)
-        print(f"Exported information for {park_name} to {park_name}_info.json")
