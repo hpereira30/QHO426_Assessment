@@ -8,23 +8,19 @@ def reviews_per_park():
 
     review_counts = {}
 
-    for row in data:
-        disneyland_name = row[4]
-        try:
-            review_count = 1
-        except ValueError:
-            continue
-
-        if disneyland_name in review_counts:
-            review_counts[disneyland_name] += review_count
+    for row in data[1:]:
+        park_name = row[4]
+        review_count = 1
+        if park_name in review_counts:
+            review_counts[park_name] += review_count
         else:
-            review_counts[disneyland_name] = review_count
+            review_counts[park_name] = review_count
 
     labels = [f"{name}\n{count} Reviews" for name, count in review_counts.items()]
     values = list(review_counts.values())
 
     plt.pie(values, labels=labels)
-    plt.title('Review Distribution for Each Disneyland')
+    plt.title('Reviews Per Park')
     plt.axis('equal')
     plt.show()
 
@@ -45,7 +41,6 @@ def average_review_score():
     for bar in bars:
         height = bar.get_height()
         plt.text(bar.get_x() + bar.get_width() / 2, height, f'{height:.2f}', ha='center', va='bottom')
-
     plt.show()
 
 
