@@ -46,7 +46,8 @@ def main_menu():
                     print("\nYou have chosen option B: Numbers of Reviews by Park & Reviewer Location")
                     park_name = input("Enter the name of the park:")
                     location = input("Enter the location of the reviews:")
-                    counter = process.reviews_by_park_and_location(process.read_data_from_csv(file_name), park_name, location)
+                    counter = process.reviews_by_park_and_location(process.read_data_from_csv(file_name), park_name,
+                                                                   location)
                     print(f"There are {counter} reviews for {park_name} from {location}.")
 
                 elif (submenu_a == "C") or (submenu_a == "c"):
